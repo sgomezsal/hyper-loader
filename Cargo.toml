@@ -1,0 +1,15 @@
+[package]
+name = "hyper-loader"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+smithay-client-toolkit = { version = "0.19", features = ["calloop"] }
+wayland-client = "0.31"
+wayland-protocols = { version = "0.32", features = ["client"] }
+wayland-protocols-wlr = { version = "0.3", features = ["client"] }
+calloop = "0.13"
+calloop-wayland-source = "0.3"
+tiny-skia = "0.11"
+image = { version = "0.25", features = ["png", "jpeg"] }
+clap = { version = "4", features = ["derive"] }
