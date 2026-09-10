@@ -1,7 +1,7 @@
 { pkgs }:
 pkgs.rustPlatform.buildRustPackage {
   pname = "hyper-loader";
-  version = "0.1.0";
+  version = "0.2.0";
 
   src = ./.;
 
@@ -9,12 +9,17 @@ pkgs.rustPlatform.buildRustPackage {
 
   nativeBuildInputs = with pkgs; [
     pkg-config
+    installShellFiles
   ];
 
   buildInputs = with pkgs; [
     wayland
     libxkbcommon
   ];
+
+  postInstall = ''
+    installManPage man/hyper-loader.1
+  '';
 
   meta = {
     description = "Native wlr-layer-shell overlay for long-running commands (e.g. nixos-rebuild switch)";

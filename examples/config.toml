@@ -1,0 +1,30 @@
+# Example hyper-loader config file.
+#
+# Copy this to $XDG_CONFIG_HOME/hyper-loader/config.toml (usually
+# ~/.config/hyper-loader/config.toml), or point --config at a copy of it.
+# Every key here is optional — omit whatever you want left at its default.
+# Any CLI flag you pass overrides the matching key below.
+
+# Primary accent color (hex, no leading "#") used for the grid, corners,
+# pulse rings and the digit counter.
+accent = "7ed4c8"
+
+# Secondary accent for grid/corner/pulse decorations. Defaults to `accent`
+# when omitted; set it to something else for a contrasting look.
+# accent2 = "b072d1"
+
+# Fade-in duration in milliseconds for the overlay decorations.
+fade_ms = 300
+
+# GIF to loop, centered on screen. Comment out to disable.
+# gif = "/home/me/.config/hyper-loader/loading.gif"
+
+# Disable the scrolling digit-counter overlay.
+no_counter = false
+
+# Scanline + glitch flicker effect over the background.
+glitch = false
+
+# Darkness (0.0-1.0) of the overlay drawn over the blurred screenshot
+# background. Out-of-range values are clamped.
+overlay_alpha = 0.55

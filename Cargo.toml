@@ -1,7 +1,13 @@
 [package]
 name = "hyper-loader"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
+description = "A native wlr-layer-shell overlay for masking long-running commands (nixos-rebuild, ansible, deploy scripts, ...) on any wlroots Wayland compositor"
+license = "MIT"
+repository = "https://github.com/sgomezsal/hyper-loader"
+readme = "README.md"
+keywords = ["wayland", "wlroots", "hyprland", "layer-shell", "overlay"]
+categories = ["command-line-utilities", "gui"]
 
 [dependencies]
 smithay-client-toolkit = { version = "0.19", features = ["calloop"] }
@@ -13,3 +19,5 @@ calloop-wayland-source = "0.3"
 tiny-skia = "0.11"
 image = { version = "0.25", features = ["png", "jpeg"] }
 clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"

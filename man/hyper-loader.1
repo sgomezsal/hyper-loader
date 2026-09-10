@@ -1,0 +1,119 @@
+.TH HYPER-LOADER 1 "2026" "hyper-loader 0.2.0" "User Commands"
+.SH NAME
+hyper-loader \- a native wlr-layer-shell overlay for masking long-running commands
+.SH SYNOPSIS
+.B hyper-loader
+[\fIOPTIONS\fR]
+.SH DESCRIPTION
+.B hyper-loader
+draws a fullscreen, click-through overlay on every connected output of a
+wlroots-based Wayland compositor (Hyprland, Sway, river, Wayfire, labwc,
+\&...) using the
+.B zwlr_layer_shell_v1
+protocol. It is meant to be shown for the few seconds a long-running command
+takes \- a
+.BR "nixos-rebuild switch --specialisation" ,
+an
+.BR ansible-playbook ,
+a deploy script \- so the transition feels deliberate instead of the
+desktop freezing mid-frame.
+.PP
+The overlay has no keyboard interactivity and reserves no screen space
+(\fIexclusive_zone = \-1\fR), so it never steals focus or shifts other
+windows.
+.SH OPTIONS
+.TP
+.BR \-\-accent " " \fIHEX\fR
+Primary accent color (hex, e.g. \fB7ed4c8\fR) used for the grid, corners,
+pulse rings and the digit counter. Default: \fB7ed4c8\fR.
+.TP
+.BR \-\-accent2 " " \fIHEX\fR
+Secondary accent color for grid/corner/pulse decorations. Defaults to
+\fB\-\-accent\fR.
+.TP
+.BR \-\-fade\-ms " " \fIMS\fR
+Fade-in duration in milliseconds for the overlay decorations. Default:
+\fB300\fR.
+.TP
+.BR \-\-gif " " \fIPATH\fR
+GIF to loop, centered on screen.
+.TP
+.B \-\-no\-counter
+Disable the scrolling digit-counter overlay.
+.TP
+.B \-\-glitch
+Enable a scanline + glitch flicker effect over the background.
+.TP
+.BR \-\-overlay\-alpha " " \fI0.0\-1.0\fR
+Darkness of the overlay drawn over the blurred screenshot background.
+Values outside \fB0.0\-1.0\fR are clamped. Default: \fB0.55\fR.
+.TP
+.BR \-\-config " " \fIPATH\fR
+Path to a TOML config file. See
+.B CONFIG FILE
+below. CLI flags always win over the config file.
+.TP
+.B \-h\fR, \fB\-\-help
+Print help and exit.
+.SH CONFIG FILE
+In addition to CLI flags,
+.B hyper-loader
+reads a TOML config file, checked in this order:
+.IP \(bu 2
+the path given via \fB\-\-config\fR, if any (an error is printed, but startup
+still proceeds with defaults, if that specific path doesn't exist)
+.IP \(bu 2
+otherwise \fI$XDG_CONFIG_HOME/hyper-loader/config.toml\fR
+.IP \(bu 2
+otherwise \fI~/.config/hyper-loader/config.toml\fR (silently skipped if
+absent)
+.PP
+Every CLI flag has a matching config key of the same name (underscores),
+e.g.:
+.PP
+.nf
+.RS
+accent = "7ed4c8"
+accent2 = "b072d1"
+fade_ms = 300
+gif = "/home/me/.config/hyper-loader/loading.gif"
+no_counter = false
+glitch = false
+overlay_alpha = 0.55
+.RE
+.fi
+.PP
+A CLI flag always overrides the same key from the config file.
+.SH BACKGROUND SCREENSHOT
+.B hyper-loader
+polls for a PNG at \fI/tmp/hyper-loader-bg.png\fR. If present when it
+starts, it is loaded, box-blurred, and cross-faded in as the backdrop, then
+the file is deleted. Typical usage is to run
+.B grim
+right before launching:
+.PP
+.nf
+.RS
+grim /tmp/hyper-loader-bg.png
+hyper-loader --accent 7ed4c8 &
+LOADER_PID=$!
+# wait for /tmp/hyper-loader-ready, run the real command, then:
+kill "$LOADER_PID"
+.RE
+.fi
+.SH READINESS SIGNAL
+Once at least one output's layer surface is configured (actually visible),
+.B hyper-loader
+writes \fI/tmp/hyper-loader-ready\fR. Callers spawning it in the background
+should poll for that file before starting the real work, to avoid a visible
+flash of the plain desktop.
+.SH EXIT STATUS
+.B hyper-loader
+runs until killed (e.g. \fBSIGTERM\fR/\fBSIGINT\fR from the caller) or every
+output it was showing on disappears.
+.SH SEE ALSO
+Full documentation, examples, and the known single-vs-multi-output history:
+.br
+https://github.com/sgomezsal/hyper-loader
+.SH AUTHOR
+sgomezsal
